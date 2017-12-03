@@ -1,5 +1,6 @@
 package ru.nsu.fit.web.login;
 
+import ru.nsu.fit.database.entities.User;
 import ru.nsu.fit.database.types.Role;
 
 public class UserDTO {
@@ -7,10 +8,10 @@ public class UserDTO {
     private String passwordHash;
     private Role role;
 
-    public UserDTO(String login, String passwordHash, Role role) {
-        this.login = login;
-        this.passwordHash = passwordHash;
-        this.role = role;
+    public UserDTO(User user) {
+        this.login = user.getLogin();
+        this.passwordHash = user.getPassword();
+        this.role = user.getRole();
     }
 
     public Role getRole() {

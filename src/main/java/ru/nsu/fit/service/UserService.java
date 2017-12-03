@@ -15,6 +15,7 @@ import ru.nsu.fit.database.types.Role;
 import ru.nsu.fit.exception.LogoutException;
 import ru.nsu.fit.exception.RegistrationException;
 import ru.nsu.fit.web.login.AuthData;
+import ru.nsu.fit.web.login.TokenDTO;
 import ru.nsu.fit.web.login.UserDTO;
 
 import java.util.Collections;
@@ -56,7 +57,7 @@ public class UserService implements UserDetailsService {
 
         User newUser = userRepository.save(new User(authData.getLogin(), passwordEncoder.encode(authData.getPassword()), Role.USER));
 
-        return new UserDTO(newUser.getLogin(), newUser.getPassword(), newUser.getRole());
+        return new UserDTO(newUser);
     }
 
     public TokenDTO login(AuthData authData) throws AuthenticationException {
