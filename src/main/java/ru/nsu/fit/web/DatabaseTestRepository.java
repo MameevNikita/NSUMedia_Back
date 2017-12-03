@@ -41,7 +41,7 @@ public class DatabaseTestRepository {
         folderRepository.save(subFolder);
 
         for(int i = 0; i < 5; ++i){
-            File file = new File(String.format("File%d", i), anyUser, subFolder);
+            File file = new File(String.format("File%d", i), anyUser, subFolder, "FIT", "UPPRO", "Lecture", 1990, 3, 4);
             fileRepository.save(file);
         }
 
