@@ -29,4 +29,13 @@ public class NavigationController {
 
         return ResponseEntity.ok(navigationService.getFolderInfo(folderId));
     }
+
+    @RequestMapping(path = "/navigation/file/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> fileInfo(@PathVariable(name = "id") int fileId) {
+        if (!navigationService.containsFile(fileId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(navigationService.getFileInfo(fileId));
+    }
 }

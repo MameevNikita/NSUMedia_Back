@@ -15,16 +15,18 @@ public class FileDTO {
     private int fullness;
 
     public FileDTO(File file) {
-        this.id = id;
-        this.name = name;
-        this.creator = creator;
-        this.checked = checked;
-        this.faculty = faculty;
-        this.discipline = discipline;
-        this.documentType = documentType;
-        this.year = year;
-        this.readability = readability;
-        this.fullness = fullness;
+        this.id = file.getId();
+        this.name = file.getName();
+        if (file.getCreator() != null) {
+            this.creator = new UserPublicDTO(file.getCreator());
+        }
+        this.checked = file.isChecked();
+        this.faculty = file.getFaculty();
+        this.discipline = file.getDiscipline();
+        this.documentType = file.getDocumentType();
+        this.year = file.getYear();
+        this.readability = file.getReadability();
+        this.fullness = file.getFullness();
     }
 
     public FileDTO() {

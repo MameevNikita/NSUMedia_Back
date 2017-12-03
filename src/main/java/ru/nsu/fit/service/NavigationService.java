@@ -5,6 +5,7 @@ import ru.nsu.fit.database.entities.File;
 import ru.nsu.fit.database.entities.Folder;
 import ru.nsu.fit.database.repositories.FileRepository;
 import ru.nsu.fit.database.repositories.FolderRepository;
+import ru.nsu.fit.web.navigation.FileDTO;
 import ru.nsu.fit.web.navigation.FolderDTO;
 
 import javax.annotation.PostConstruct;
@@ -70,5 +71,13 @@ public class NavigationService {
 
     public FolderDTO getFolderInfo(int folderId) {
         return new FolderDTO(folderRepository.findById(folderId));
+    }
+
+    public boolean containsFile(int fileId) {
+        return fileRepository.findById(fileId) != null;
+    }
+
+    public FileDTO getFileInfo(int fileId) {
+        return new FileDTO(fileRepository.findById(fileId));
     }
 }
