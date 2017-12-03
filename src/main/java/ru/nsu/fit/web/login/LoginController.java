@@ -2,11 +2,12 @@ package ru.nsu.fit.web.login;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import ru.nsu.fit.database.entities.User;
+import ru.nsu.fit.exception.LogoutException;
 import ru.nsu.fit.exception.RegistrationException;
 import ru.nsu.fit.service.TokenDTO;
 import ru.nsu.fit.service.UserService;
@@ -40,7 +41,20 @@ public class LoginController {
         try{
             token = userService.login(authData);
         }catch (AuthenticationException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("Cann't register user!"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("Cann't login!"));
+        }
+
+        return ResponseEntity.ok(token);
+    }
+
+    @RequestMapping(path = "/logoff", method = RequestMethod.GET)
+    ResponseEntity<?> logout(@RequestHeader(name = "X-Auth-Token") String authToken){
+        TokenDTO token;
+
+        try{
+            token = userService.logout(authToken);
+        }catch (LogoutException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("Cann't logout!"));
         }
 
         return ResponseEntity.ok(token);

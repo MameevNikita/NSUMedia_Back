@@ -4,4 +4,5 @@ import org.springframework.data.repository.CrudRepository;
 import ru.nsu.fit.database.entities.Token;
 
 public interface TokenRepository extends CrudRepository<Token, Long> {
+    Token findByData(String data);
 }

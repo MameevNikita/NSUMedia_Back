@@ -12,6 +12,7 @@ import ru.nsu.fit.database.entities.User;
 import ru.nsu.fit.database.repositories.TokenRepository;
 import ru.nsu.fit.database.repositories.UserRepository;
 import ru.nsu.fit.database.types.Role;
+import ru.nsu.fit.exception.LogoutException;
 import ru.nsu.fit.exception.RegistrationException;
 import ru.nsu.fit.web.login.AuthData;
 import ru.nsu.fit.web.login.UserDTO;
@@ -62,7 +63,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByLogin(authData.getLogin());
 
         if(user == null){
-            throw new UsernameNotFoundException("There is no user with same login!");
+            throw new UsernameNotFoundException("There is no user with same login");
         }
         else if(!passwordEncoder.matches(authData.getPassword(), user.getPassword())){
             throw new UsernameNotFoundException("Incorrect login or password");
@@ -70,6 +71,17 @@ public class UserService implements UserDetailsService {
 
         String tokenUniqueData = Integer.toString((int)(Math.random() * Integer.MAX_VALUE));
         Token token = tokenRepository.save(new Token(tokenUniqueData, user));
+        return new TokenDTO(token.getData());
+    }
+
+    public TokenDTO logout(String authToken) throws LogoutException {
+        Token token = tokenRepository.findByData(authToken);
+
+        if(token == null){
+            throw new LogoutException("Incorrect token");
+        }
+
+        tokenRepository.delete(token);
         return new TokenDTO(token.getData());
     }
 }
