@@ -1,11 +1,13 @@
 package ru.nsu.fit.service;
 
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.nsu.fit.database.entities.Token;
 import ru.nsu.fit.database.entities.User;
 import ru.nsu.fit.database.repositories.TokenRepository;
 import ru.nsu.fit.database.repositories.UserRepository;
@@ -54,5 +56,20 @@ public class UserService implements UserDetailsService {
         User newUser = userRepository.save(new User(authData.getLogin(), passwordEncoder.encode(authData.getPassword()), Role.USER));
 
         return new UserDTO(newUser.getLogin(), newUser.getPassword(), newUser.getRole());
+    }
+
+    public TokenDTO login(AuthData authData) throws AuthenticationException {
+        User user = userRepository.findByLogin(authData.getLogin());
+
+        if(user == null){
+            throw new UsernameNotFoundException("There is no user with same login!");
+        }
+        else if(!passwordEncoder.matches(authData.getPassword(), user.getPassword())){
+            throw new UsernameNotFoundException("Incorrect login or password");
+        }
+
+        String tokenUniqueData = Integer.toString((int)(Math.random() * Integer.MAX_VALUE));
+        Token token = tokenRepository.save(new Token(tokenUniqueData, user));
+        return new TokenDTO(token.getData());
     }
 }
