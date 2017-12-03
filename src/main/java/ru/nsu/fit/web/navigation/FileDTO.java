@@ -1,56 +1,43 @@
-package ru.nsu.fit.database.entities;
+package ru.nsu.fit.web.navigation;
 
-import org.hibernate.validator.constraints.Range;
+import ru.nsu.fit.database.entities.File;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "FILES")
-public class File {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class FileDTO {
     private Integer id;
-
     private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "creator_id")
-    private User creator;
-
-    @ManyToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "parent_folder_id")
-    private Folder parentFolder;
-
+    private UserPublicDTO creator;
     private boolean checked = false;
-
     private String faculty;
     private String discipline;
     private String documentType;
     private int year;
+    private int readability;
+    private int fullness;
 
-    @Range(min = 1, max = 5)
-    private int readability = 1;
-
-    @Range(min = 1, max = 5)
-    private int fullness = 1;
-
-    public File() {
+    public FileDTO(File file) {
+        this.id = file.getId();
+        this.name = file.getName();
+        if (file.getCreator() != null) {
+            this.creator = new UserPublicDTO(file.getCreator());
+        }
+        this.checked = file.isChecked();
+        this.faculty = file.getFaculty();
+        this.discipline = file.getDiscipline();
+        this.documentType = file.getDocumentType();
+        this.year = file.getYear();
+        this.readability = file.getReadability();
+        this.fullness = file.getFullness();
     }
 
-    public File(String name, User creator, Folder parentFolder, String faculty, String discipline, String documentType, int year, int readability, int fullness) {
-        this.name = name;
-        this.creator = creator;
-        this.parentFolder = parentFolder;
-        this.faculty = faculty;
-        this.discipline = discipline;
-        this.documentType = documentType;
-        this.year = year;
-        this.readability = readability;
-        this.fullness = fullness;
+    public FileDTO() {
     }
 
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -61,20 +48,12 @@ public class File {
         this.name = name;
     }
 
-    public User getCreator() {
+    public UserPublicDTO getCreator() {
         return creator;
     }
 
-    public void setCreator(User creator) {
+    public void setCreator(UserPublicDTO creator) {
         this.creator = creator;
-    }
-
-    public Folder getParentFolder() {
-        return parentFolder;
-    }
-
-    public void setParentFolder(Folder parentFolder) {
-        this.parentFolder = parentFolder;
     }
 
     public boolean isChecked() {

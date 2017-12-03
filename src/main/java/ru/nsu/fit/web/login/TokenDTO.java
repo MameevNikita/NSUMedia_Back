@@ -1,4 +1,4 @@
-package ru.nsu.fit.service;
+package ru.nsu.fit.web.login;
 
 public class TokenDTO {
     private String data;
@@ -6,7 +6,7 @@ public class TokenDTO {
     public TokenDTO() {
     }
 
-    TokenDTO(String data) {
+    public TokenDTO(String data) {
         this.data = data;
     }
 

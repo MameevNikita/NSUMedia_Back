@@ -11,6 +11,10 @@ public class Folder {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    public Integer getId() {
+        return id;
+    }
+
     private String name;
 
     @ManyToOne
@@ -28,15 +32,21 @@ public class Folder {
     private Set<File> files = new HashSet<>();
 
 
-    public Folder(String name, User creator, Folder parentFolder) {
-        this.name = name;
-        this.creator = creator;
-        this.parentFolder = parentFolder;
+
+    private boolean root = false;
+
+    public Set<Folder> getSubfolders() {
+        return subfolders;
     }
 
-    public Folder(String name, User creator) {
+    public Set<File> getFiles() {
+        return files;
+    }
+
+    public Folder(String name, User creator, boolean root) {
         this.name = name;
         this.creator = creator;
+        this.root = root;
     }
 
     public Folder() {

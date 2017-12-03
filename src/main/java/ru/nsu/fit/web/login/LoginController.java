@@ -2,14 +2,10 @@ package ru.nsu.fit.web.login;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import ru.nsu.fit.database.entities.User;
 import ru.nsu.fit.exception.LogoutException;
 import ru.nsu.fit.exception.RegistrationException;
-import ru.nsu.fit.service.TokenDTO;
 import ru.nsu.fit.service.UserService;
 import ru.nsu.fit.web.ErrorMessage;
 
