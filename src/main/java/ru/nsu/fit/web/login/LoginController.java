@@ -22,7 +22,7 @@ public class LoginController {
         UserDTO user;
 
         try{
-            user = userService.register(authData);
+            user = new UserDTO(userService.register(authData));
         }catch (RegistrationException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("Cann't register user!"));
         }
@@ -35,7 +35,7 @@ public class LoginController {
         TokenDTO token;
 
         try{
-            token = userService.login(authData);
+            token = new TokenDTO(userService.login(authData));
         }catch (AuthenticationException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("Cann't login!"));
         }
@@ -48,7 +48,7 @@ public class LoginController {
         TokenDTO token;
 
         try{
-            token = userService.logout(authToken);
+            token = new TokenDTO(userService.logout(authToken));
         }catch (LogoutException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessage("Cann't logout!"));
         }

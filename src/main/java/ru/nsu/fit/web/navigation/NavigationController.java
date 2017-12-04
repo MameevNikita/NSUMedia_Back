@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import ru.nsu.fit.database.entities.Folder;
 import ru.nsu.fit.service.NavigationService;
 
 @RestController
@@ -27,7 +28,7 @@ public class NavigationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.ok(navigationService.getFolderInfo(folderId));
+        return ResponseEntity.ok(new FolderDTO(navigationService.getFolderInfo(folderId)));
     }
 
     @RequestMapping(path = "/navigation/file/{id}", method = RequestMethod.GET)
@@ -36,6 +37,6 @@ public class NavigationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.ok(navigationService.getFileInfo(fileId));
+        return ResponseEntity.ok(new FileDTO(navigationService.getFileInfo(fileId)));
     }
 }

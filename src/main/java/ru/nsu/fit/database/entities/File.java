@@ -1,6 +1,7 @@
 package ru.nsu.fit.database.entities;
 
 import org.hibernate.validator.constraints.Range;
+import ru.nsu.fit.web.navigation.FileDTO;
 
 import javax.persistence.*;
 
@@ -35,6 +36,16 @@ public class File {
     private int fullness = 1;
 
     public File() {
+    }
+
+    public File(FileDTO fileDTO) {
+        this.name = fileDTO.getName();
+        this.faculty = fileDTO.getFaculty();
+        this.discipline = fileDTO.getDiscipline();
+        this.documentType = fileDTO.getDocumentType();
+        this.year = fileDTO.getYear();
+        this.readability = fileDTO.getReadability();
+        this.fullness = fileDTO.getFullness();
     }
 
     public File(String name, User creator, Folder parentFolder, String faculty, String discipline, String documentType, int year, int readability, int fullness) {
