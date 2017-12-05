@@ -41,4 +41,8 @@ public class LoadService {
         fileDataRepository.save(new FileData(file, data));
         return file;
     }
+
+    public byte[] getFileData(File file) {
+        return fileDataRepository.findByFile(file).getData();
+    }
 }
