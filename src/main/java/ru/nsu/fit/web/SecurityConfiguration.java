@@ -31,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/navigation/**").permitAll()
                 .antMatchers("/login", "/register").anonymous()
-                .antMatchers("/logoff").authenticated()
+                .antMatchers("/logoff", "/upload", "/uploadData/**").authenticated()
                 .anyRequest().permitAll()
         .and()
                 .csrf().disable();

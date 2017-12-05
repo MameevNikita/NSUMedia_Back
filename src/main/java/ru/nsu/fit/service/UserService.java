@@ -48,7 +48,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public UserDTO register(AuthData authData) throws RegistrationException {
+    public User register(AuthData authData) throws RegistrationException {
         User user = userRepository.findByLogin(authData.getLogin());
 
         if(user != null){
@@ -57,10 +57,10 @@ public class UserService implements UserDetailsService {
 
         User newUser = userRepository.save(new User(authData.getLogin(), passwordEncoder.encode(authData.getPassword()), Role.USER));
 
-        return new UserDTO(newUser);
+        return newUser;
     }
 
-    public TokenDTO login(AuthData authData) throws AuthenticationException {
+    public Token login(AuthData authData) throws AuthenticationException {
         User user = userRepository.findByLogin(authData.getLogin());
 
         if(user == null){
@@ -72,10 +72,10 @@ public class UserService implements UserDetailsService {
 
         String tokenUniqueData = Integer.toString((int)(Math.random() * Integer.MAX_VALUE));
         Token token = tokenRepository.save(new Token(tokenUniqueData, user));
-        return new TokenDTO(token.getData());
+        return token;
     }
 
-    public TokenDTO logout(String authToken) throws LogoutException {
+    public Token logout(String authToken) throws LogoutException {
         Token token = tokenRepository.findByData(authToken);
 
         if(token == null){
@@ -83,6 +83,10 @@ public class UserService implements UserDetailsService {
         }
 
         tokenRepository.delete(token);
-        return new TokenDTO(token.getData());
+        return token;
+    }
+
+    public User getUser(String authToken){
+        return tokenRepository.findByData(authToken).getOwner();
     }
 }

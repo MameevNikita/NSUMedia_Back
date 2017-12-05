@@ -3,12 +3,16 @@ package ru.nsu.fit.service;
 import org.springframework.stereotype.Service;
 import ru.nsu.fit.database.entities.File;
 import ru.nsu.fit.database.entities.Folder;
+import ru.nsu.fit.database.entities.User;
 import ru.nsu.fit.database.repositories.FileRepository;
 import ru.nsu.fit.database.repositories.FolderRepository;
+import ru.nsu.fit.database.repositories.UserRepository;
+import ru.nsu.fit.web.login.UserDTO;
 import ru.nsu.fit.web.navigation.FileDTO;
 import ru.nsu.fit.web.navigation.FolderDTO;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Service
 public class NavigationService {
@@ -16,10 +20,12 @@ public class NavigationService {
 
     private FolderRepository folderRepository;
     private FileRepository fileRepository;
+    private UserRepository userRepository;
 
-    public NavigationService(FolderRepository folderRepository, FileRepository fileRepository) {
+    public NavigationService(FolderRepository folderRepository, FileRepository fileRepository, UserRepository userRepository) {
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
+        this.userRepository = userRepository;
     }
 
     @PostConstruct
@@ -31,34 +37,6 @@ public class NavigationService {
         }
 
         rootFolderId = rootFolder.getId();
-
-        // Todo: remove! Only for testing.
-
-        Folder a1 = new Folder("a1", null, false);
-        a1 = folderRepository.save(a1);
-        a1.setParentFolder(rootFolder);
-        folderRepository.save(a1);
-
-        Folder a2 = new Folder("a2", null, false);
-        a2 = folderRepository.save(a2);
-        a2.setParentFolder(rootFolder);
-        folderRepository.save(a2);
-
-        Folder a3 = new Folder("a3", null, false);
-        a3 = folderRepository.save(a3);
-        a3.setParentFolder(rootFolder);
-        folderRepository.save(a3);
-
-
-        Folder b1 = new Folder("b1", null, false);
-        b1 = folderRepository.save(b1);
-        b1.setParentFolder(a1);
-        folderRepository.save(b1);
-
-        File f1 = new File("File", null, null, "FIT", "UPPRO", "Lecture", 1999, 3, 4);
-        f1 = fileRepository.save(f1);
-        f1.setParentFolder(b1);
-        fileRepository.save(f1);
     }
 
     public int getRootFolderId() {
@@ -69,15 +47,46 @@ public class NavigationService {
         return folderRepository.findById(folderId) != null;
     }
 
-    public FolderDTO getFolderInfo(int folderId) {
-        return new FolderDTO(folderRepository.findById(folderId));
+    public Folder getFolderInfo(int folderId) {
+        return folderRepository.findById(folderId);
     }
 
     public boolean containsFile(int fileId) {
         return fileRepository.findById(fileId) != null;
     }
 
-    public FileDTO getFileInfo(int fileId) {
-        return new FileDTO(fileRepository.findById(fileId));
+    public File getFileInfo(int fileId) {
+        return fileRepository.findById(fileId);
+    }
+
+    public Folder createPath(List<String> foldersPath, User creator) {
+        Folder folder = folderRepository.findById(getRootFolderId());
+
+        for(String subfolderName : foldersPath){
+            Folder subfolder = folderRepository.findByNameAndAndParentFolder(subfolderName, folder);
+
+            if(subfolder == null){
+                subfolder = new Folder(subfolderName, creator, false);
+                subfolder = folderRepository.save(subfolder);
+
+                subfolder.setParentFolder(folder);
+                subfolder = folderRepository.save(subfolder);
+            }
+
+            folder = subfolder;
+        }
+
+        return folder;
+    }
+
+    public File createFile(FileDTO fileInfo, Folder lastFolder, User creator) {
+        File file = new File(fileInfo);
+
+        file = fileRepository.save(file);
+        file.setParentFolder(lastFolder);
+        file.setCreator(creator);
+
+        file = fileRepository.save(file);
+        return file;
     }
 }
