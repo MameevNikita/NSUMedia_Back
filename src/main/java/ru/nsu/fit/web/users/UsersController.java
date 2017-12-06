@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.database.entities.User;
 import ru.nsu.fit.database.types.Role;
 import ru.nsu.fit.service.UserService;
+import ru.nsu.fit.web.ErrorMessage;
+import ru.nsu.fit.web.login.AuthData;
 import ru.nsu.fit.web.navigation.UserPublicDTO;
 
 import java.util.stream.Collectors;
@@ -38,6 +40,16 @@ public class UsersController {
 
         User modifiedUser = userService.changeRole(user);
 
+        return ResponseEntity.ok(new UserPublicDTO(modifiedUser));
+    }
+
+    @RequestMapping(path = "/password/change", method = RequestMethod.POST)
+    public ResponseEntity<?> changePassword(@RequestHeader(name = "X-Auth-Token") String authToken, @RequestBody AuthData authData) {
+        User user = userService.getUser(authToken);
+        if(!user.getLogin().equals(authData.getLogin())){
+            return ResponseEntity.badRequest().body(new ErrorMessage("You have no permissions to change password of this user"));
+        }
+        User modifiedUser = userService.changePassword(authData);
         return ResponseEntity.ok(new UserPublicDTO(modifiedUser));
     }
 }
