@@ -21,7 +21,7 @@ public class Folder {
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(cascade = {CascadeType.DETACH})
     @JoinColumn(name = "parent_folder_id")
     private Folder parentFolder;
 
@@ -74,5 +74,13 @@ public class Folder {
 
     public void setParentFolder(Folder parentFolder) {
         this.parentFolder = parentFolder;
+    }
+
+    public boolean isRoot() {
+        return root;
+    }
+
+    public void setRoot(boolean root) {
+        this.root = root;
     }
 }
