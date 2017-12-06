@@ -18,7 +18,7 @@ public class File {
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(cascade = {CascadeType.DETACH})
     @JoinColumn(name = "parent_folder_id")
     private Folder parentFolder;
 

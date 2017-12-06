@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import ru.nsu.fit.database.entities.File;
 import ru.nsu.fit.database.entities.Folder;
 import ru.nsu.fit.service.NavigationService;
+
+import java.util.stream.Collectors;
 
 @RestController
 public class NavigationController {
@@ -38,5 +41,15 @@ public class NavigationController {
         }
 
         return ResponseEntity.ok(new FileDTO(navigationService.getFileInfo(fileId)));
+    }
+
+    @RequestMapping(path = "/navigation/filesOfUser/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> filesOfUser(@PathVariable(name = "id") int userId) {
+        return ResponseEntity.ok(navigationService.getFilesOfUser(userId).stream().map(FileDTO::new).collect(Collectors.toList()));
+    }
+
+    @RequestMapping(path = "/navigation/allFiles", method = RequestMethod.GET)
+    public ResponseEntity<?> allFiles() {
+        return ResponseEntity.ok(navigationService.getAllFiles().stream().map(FileDTO::new).collect(Collectors.toList()));
     }
 }
