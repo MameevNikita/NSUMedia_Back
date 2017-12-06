@@ -2,10 +2,7 @@ package ru.nsu.fit.web.navigation;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.nsu.fit.database.entities.File;
 import ru.nsu.fit.database.entities.Folder;
 import ru.nsu.fit.service.NavigationService;
@@ -51,5 +48,10 @@ public class NavigationController {
     @RequestMapping(path = "/navigation/allFiles", method = RequestMethod.GET)
     public ResponseEntity<?> allFiles() {
         return ResponseEntity.ok(navigationService.getAllFiles().stream().map(FileDTO::new).collect(Collectors.toList()));
+    }
+
+    @RequestMapping(path = "/navigation/search", method = RequestMethod.POST)
+    public ResponseEntity<?> searchFiles(@RequestBody String searchRequest) {
+        return ResponseEntity.ok(navigationService.searchFiles(searchRequest).stream().map(FileDTO::new).collect(Collectors.toList()));
     }
 }

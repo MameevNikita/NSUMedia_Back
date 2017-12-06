@@ -15,6 +15,7 @@ import ru.nsu.fit.web.navigation.FolderDTO;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -112,5 +113,20 @@ public class NavigationService {
             }
         }
         return files;
+    }
+
+    public List<File> searchFiles(String searchRequest) {
+        List<String> tokens = Arrays.asList(searchRequest.split(" "));
+
+        List<File> searchResult = new ArrayList<>();
+        for(File file : getAllFiles()){
+            List<String> checkValues = Arrays.asList(file.getFaculty(), file.getDiscipline(), file.getDocumentType(), file.getName(), file.getCreator().getLogin());
+
+            if(checkValues.stream().anyMatch(checkValue -> tokens.stream().anyMatch(checkValue::contains))){
+                searchResult.add(file);
+            }
+        }
+
+        return searchResult;
     }
 }
