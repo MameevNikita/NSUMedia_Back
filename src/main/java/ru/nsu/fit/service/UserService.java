@@ -112,6 +112,19 @@ public class UserService implements UserDetailsService {
         return modifiedUser;
     }
 
+    public User changePassword(AuthData authData) throws UsernameNotFoundException {
+        User modifiedUser = userRepository.findByLogin(authData.getLogin());
+
+        if (modifiedUser == null) {
+            throw new UsernameNotFoundException("There is no user with username " + authData.getLogin());
+        }
+
+        modifiedUser.setPassword(passwordEncoder.encode(authData.getPassword()));
+        modifiedUser = userRepository.save(modifiedUser);
+
+        return modifiedUser;
+    }
+
     @PostConstruct
     private void initializeUsers() {
         User[] administrators = userRepository.findAllByRole(Role.ADMINISTRATOR);

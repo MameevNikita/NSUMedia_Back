@@ -31,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/navigation/**").permitAll()
                 .antMatchers("/login", "/register").anonymous()
-                .antMatchers("/logoff", "/upload", "/uploadData/**", "/users/me", "/management/deleteFile/**").authenticated()
+                .antMatchers("/logoff", "/upload", "/uploadData/**", "/users/me", "/management/deleteFile/**", "/password/change").authenticated()
                 .antMatchers("/roles/change", "/management/markFileAsChecked/**").hasAuthority("ADMINISTRATOR")
                 .anyRequest().permitAll()
         .and()
